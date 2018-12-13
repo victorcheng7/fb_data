@@ -7,10 +7,6 @@ var credentials = {
     password: process.env.PASSWORD
 }
 
-/*
-Derive insight out of 
-*/
-
 
 // Create simple echo bot
 login({email: process.env.EMAIL, password: process.env.PASSWORD}, (err, api) => {
