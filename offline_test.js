@@ -1,11 +1,33 @@
 const fs = require("fs");
 
-function mostCommonOccurance(arr, key) {
-	var 
+// Reduces array of objects into array of value @ specified key
+function flattenArrayByKey(arr, key) { // Returns Array
+	const getNestedObject = (nestedObj, pathArr) => {
+		return pathArr.reduce((obj, key) =>
+        	(obj && obj[key] !== 'undefined') ? obj[key] : undefined, nestedObj);
+	};
+
+	return arr.map(friend => {
+		return getNestedObject(friend, key instanceof Array ? key : [key]);
+	}).filter(result => typeof result != "undefined");
+}
+
+// Given array, returns [most occured value, count of most occured value] 
+function mostFrequentOccurance(arr) { 
 	var dict = {};
-	arr.forEach(friend => {
-		if()
-	})
+	var maxValue;
+	var maxCount = 0;
+	arr.forEach(value => {
+		if(dict[value] == undefined) dict[value] = 1;
+		else dict[value]++;
+	});
+	Object.keys(dict).forEach(function(key) {
+		if(dict[key] > maxCount) {
+			maxCount = dict[key];
+			maxValue = key;
+		}
+	});
+	return [maxValue, maxCount];
 }
 
 /*
@@ -20,6 +42,7 @@ fs.readFile('messageData.txt', function(err, data) {
 fs.readFile('friendsData.txt', function(err, data) {
 
 	const friendList = JSON.parse(data);
+	console.log(friendList[0]);
 
 	console.log("Total friends: " + friendList.length);
 
@@ -34,10 +57,11 @@ fs.readFile('friendsData.txt', function(err, data) {
 	console.log("Total # unknown gendered friends: " + unknownGenderFriends.length);
 	console.log("Total # neutral gendered friends: " + neuterFriends.length);
 
-	// Most common male first name
-	var commonFemaleName = mostCommonOccurance(femaleFriends, "firstName");
-	var commonMaleName = mostCommonOccurance(maleFriends, "firstName");
+	// Most common male/female first names
+	var commonFemaleName = mostFrequentOccurance(flattenArrayByKey(femaleFriends, "firstName"));
+	var commonMaleName = mostFrequentOccurance(flattenArrayByKey(maleFriends, "firstName"));
+	console.log("Most common female name: " + commonFemaleName[0] + " with count " + commonFemaleName[1]);
+	console.log("Most common male name: " + commonMaleName[0] + " with count " + commonFemaleName[1]);
 
-	// Most common female first name
 
 });
