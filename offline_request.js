@@ -24,7 +24,7 @@ fs.readFile('data/large_messageData.txt', function(err, data) {
 		var i = 0;
 		while(bestFriends.length < 3 && i < sortedMessageList.length) {
 			var friend = sortedMessageList[i];
-			if(sortedMessageList[i].lastMessageTimestamp < dateOneYearAgo && !friend.isGroup && friend.muteUntil != null) bestFriends.push(sortedMessageList[i]);  
+			if(sortedMessageList[i].lastMessageTimestamp < dateOneYearAgo && !friend.isGroup && friend.muteUntil == null) bestFriends.push(sortedMessageList[i]);  
 			i++;
 		}
 		return[bestFriends[0], bestFriends[1], bestFriends[2]];
@@ -35,7 +35,7 @@ fs.readFile('data/large_messageData.txt', function(err, data) {
 		var i = 0;
 		while(bestFriends.length < 3 && i < sortedMessageList.length) {
 			var friend = sortedMessageList[i];
-			if(friend.lastMessageTimestamp >= dateOneYearAgo && !friend.isGroup && friend.muteUntil != null) bestFriends.push(friend); 
+			if(friend.lastMessageTimestamp >= dateOneYearAgo && !friend.isGroup && friend.muteUntil == null) bestFriends.push(friend); 
 			i++; 
 		}
 		return[bestFriends[0], bestFriends[1], bestFriends[2]];
@@ -45,10 +45,17 @@ fs.readFile('data/large_messageData.txt', function(err, data) {
 		// TODO Returns unread messageas
 	}
 
+	function findIrrelevantFriends() {
+
+	}
+
 	console.log("Recent best friends")
-	findRecentBestFriends().forEach(friend => console.log(friend.name));
+	findRecentBestFriends().forEach(friend => console.log(friend.name == undefined ? '' : friend.name));
+	var last = sortedMessageList[0]
+	console.log(last.threadID + " " + last.messageCount);
 	console.log("Old best friends")
-	findOldBestFriends().forEach(friend => console.log(friend.name));
+	findOldBestFriends().forEach(friend => console.log(friend.name == undefined ? '' : friend.name));
+	console.log("Total message count: " + messageList.reduce((accum, friend) => accum + parseInt(friend.messageCount), 0));
    	// console.log(messageList[0]);
 });
 
@@ -58,8 +65,6 @@ fs.readFile('data/large_messageData.txt', function(err, data) {
 fs.readFile('data/friendsData.txt', function(err, data) {
 
 	const friendList = JSON.parse(data);
-	console.log(friendList[0]);
-
 	console.log("Total friends: " + friendList.length);
 
 	// Gender of Friends -- Change to percentage

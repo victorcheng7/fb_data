@@ -15,10 +15,12 @@ function mostFrequentOccurance(arr) {
 	var dict = {};
 	var maxValue;
 	var maxCount = 0;
+	
 	arr.forEach(value => {
 		if(dict[value] == undefined) dict[value] = 1;
 		else dict[value]++;
 	});
+
 	Object.keys(dict).forEach(function(key) {
 		if(dict[key] > maxCount) {
 			maxCount = dict[key];
